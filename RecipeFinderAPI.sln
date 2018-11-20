@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2046
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecipeFinderAPI", "RecipieFinderAPI\RecipeFinderAPI.csproj", "{55AD8FB6-CA72-4652-9191-A8087C3F7F5B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{55AD8FB6-CA72-4652-9191-A8087C3F7F5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55AD8FB6-CA72-4652-9191-A8087C3F7F5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55AD8FB6-CA72-4652-9191-A8087C3F7F5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55AD8FB6-CA72-4652-9191-A8087C3F7F5B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3A76F65C-7149-4073-BC84-6958CDAB91C4}
+	EndGlobalSection
+EndGlobal

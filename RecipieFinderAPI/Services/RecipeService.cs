@@ -118,6 +118,11 @@ namespace RecipeFinderAPI.Services
 		{
 			return context.Recipes.Include(i => i.ingredients).Where(r => r.Id == id).ToList();
 		}
+		public async Task UpdateRecipe(Recipe recipe)
+		{
+			context.Recipes.Update(recipe);
+			await context.SaveChangesAsync();
+		}
 
 
 	}

@@ -11,6 +11,6 @@ namespace RecipeFinderAPI.Services.Interfaces
 		Task<List<Recipe>> GetRecipesAsync(string searchitem);
 		Recipe GetRecipeById(int id);
 		List<Recipe> GetRecipeByRecipeId(int id);
-
+		Task UpdateRecipe(Recipe recipe);
 	}
 }

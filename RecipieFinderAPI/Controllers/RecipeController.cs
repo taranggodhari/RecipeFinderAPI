@@ -31,6 +31,7 @@ namespace RecipeFinderAPI.Controllers
 		// GET: api/<controller>
 		[HttpGet()]
 		[ProducesResponseType(typeof(IEnumerable<Recipe>), 200)]
+		[ProducesResponseType(404)]
 		public async Task<IEnumerable<Recipe>> Get() => await recipeService.GetRecipesAsync("fresh picks");
 
 
@@ -95,6 +96,7 @@ namespace RecipeFinderAPI.Controllers
 		}
 		// POST api/<controller>
 		[HttpPost]
+		[ProducesResponseType(400)]
 		public async Task Post([FromBody]PostRecipe postRecipe)
 		{
 			var recipeid = postRecipe.RecipeId;
@@ -143,13 +145,32 @@ namespace RecipeFinderAPI.Controllers
 		}
 
 		// PUT api/<controller>/5
-		[HttpPut("{id}")]
-		public void Put(int id, [FromBody]string value)
+		[HttpPut("{id}/{email}")]
+		[ProducesResponseType(204)]
+		[ProducesResponseType(400)]
+		[ProducesResponseType(404)]
+		public async Task Put(int id, string email, [FromBody]Recipe recipe)
 		{
+			var recipeid = recipe.Id.ToString();
+			try
+			{
+				if (recipeid != null && email != null)
+				{
+					await recipeService.UpdateRecipe(recipe);
+				}
+			}
+			catch (Exception e)
+			{
+
+				Console.WriteLine(e.StackTrace, e.Message);
+			}
 		}
 
 		// DELETE api/<controller>/5/email
 		[HttpDelete("{id}/{email}")]
+		[ProducesResponseType(204)]
+		[ProducesResponseType(400)]
+		[ProducesResponseType(404)]
 		public async Task Delete(int id, string email)
 		{
 			try

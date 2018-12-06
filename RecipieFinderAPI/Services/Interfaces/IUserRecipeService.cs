@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace RecipeFinderAPI.Services.Interfaces
 {
-	public interface IRecipeService
+	public interface IUserRecipeService
 	{
-		Task<List<Recipe>> GetRecipesAsync(string searchitem);
-		Recipe GetRecipeById(int id);
-		List<Recipe> GetRecipeByRecipeId(int id);
-
+		UserRecipe GetUserRecipe(UserRecipe userRecipe);
+		List<UserRecipe> GetUserRecipes(int id);
 	}
 }

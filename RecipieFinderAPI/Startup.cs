@@ -6,12 +6,15 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using RecipeFinderAPI.Services;
 using RecipeFinderAPI.Services.Interfaces;
+using RecipieFinderAPI.Models;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace RecipieFinderAPI
@@ -28,11 +31,18 @@ namespace RecipieFinderAPI
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
+			services.AddDbContext<RecipieFinderContext>(options =>
+				options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+				.AddJsonOptions(options =>
+				{
+					options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+				});
 			//services.AddDbContext<TodoContext>(opt => opt.UseInMemoryDatabase("TodoList"));
 			//Singleton lifetime services are created the first time they're requested 
-			services.AddSingleton<IRecipeService, RecipeService>();
+			services.AddTransient<IRecipeService, RecipeService>();
+			services.AddTransient<IUserService, UserService>();
+			services.AddTransient<IUserRecipeService, UsersRecipeService>();
 			//register the swagger generator
 			services.AddSwaggerGen(c =>
 			{

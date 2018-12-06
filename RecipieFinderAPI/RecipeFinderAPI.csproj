@@ -5,12 +5,30 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20181203061238_AddedRootObjectAndHitModel.cs" />
+    <Compile Remove="Migrations\20181203061238_AddedRootObjectAndHitModel.Designer.cs" />
+    <Compile Remove="Migrations\20181203063222_UpdatedModels.cs" />
+    <Compile Remove="Migrations\20181203063222_UpdatedModels.Designer.cs" />
+    <Compile Remove="Migrations\20181204090802_UpdatedUsernameColumnToRecipe.cs" />
+    <Compile Remove="Migrations\20181204090802_UpdatedUsernameColumnToRecipe.Designer.cs" />
+    <Compile Remove="Migrations\20181205200235_AddedUsersTable.cs" />
+    <Compile Remove="Migrations\20181205200235_AddedUsersTable.Designer.cs" />
+    <Compile Remove="Migrations\20181205200638_AddedUsersTable.cs" />
+    <Compile Remove="Migrations\20181205200638_AddedUsersTable.Designer.cs" />
+    <Compile Remove="Migrations\20181205200826_AddedUsersTable.cs" />
+    <Compile Remove="Migrations\20181205200826_AddedUsersTable.Designer.cs" />
+    <Compile Remove="Migrations\20181205201538_AddedUsersTable.cs" />
+    <Compile Remove="Migrations\20181205201538_AddedUsersTable.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.1.4" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="4.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="4.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="4.0.1" />

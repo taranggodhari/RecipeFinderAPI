@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using RecipeFinderAPI.Model;
 using RecipeFinderAPI.Services.Interfaces;
-using static RecipeFinderAPI.Model.EdamamModel;
+using RecipieFinderAPI.Models;
+
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -14,10 +16,16 @@ namespace RecipeFinderAPI.Controllers
 	[Route("api/[controller]")]
 	public class RecipeController : Controller
 	{
+		private readonly RecipieFinderContext context;
 		private readonly IRecipeService recipeService;
-		public RecipeController(IRecipeService _recipeService)
+		private readonly IUserService userService;
+		private readonly IUserRecipeService userRecipeService;
+		public RecipeController(IRecipeService _recipeService, IUserService _userService, IUserRecipeService _userRecipeService, RecipieFinderContext _context)
 		{
 			recipeService = _recipeService;
+			userService = _userService;
+			userRecipeService = _userRecipeService;
+			context = _context;
 		}
 
 		// GET: api/<controller>
@@ -27,7 +35,7 @@ namespace RecipeFinderAPI.Controllers
 
 
 		// GET api/recipe/chicken
-		[HttpGet("{query}", Name = nameof(Get))]
+		[HttpGet("query/{query}", Name = nameof(Get))]
 		[ProducesResponseType(typeof(Recipe), 200)]
 		[ProducesResponseType(404)]
 		public async Task<IActionResult> Get(string query)
@@ -39,14 +47,99 @@ namespace RecipeFinderAPI.Controllers
 			}
 			else
 			{
-				return new ObjectResult(recipes);
+				return Ok(recipes);
 			}
 		}
+		// GET api/recipe/id/id
+		[HttpGet("id/{id}", Name = nameof(GetById))]
+		[ProducesResponseType(typeof(Recipe), 200)]
+		[ProducesResponseType(404)]
+		public IActionResult GetById(int id)
+		{
+			Recipe recipe = recipeService.GetRecipeById(id);
+			if (recipe == null)
+			{
+				return NotFound();
+			}
+			else
+			{
+				return Ok(recipe);
+			}
+		}
+		// GET api/recipe/id/id
+		[HttpGet("userrecipe/{email}", Name = nameof(GetUserRecipe))]
+		[ProducesResponseType(typeof(Recipe), 200)]
+		[ProducesResponseType(404)]
+		public IActionResult GetUserRecipe(string email)
+		{
+			var user = userService.GetUserByEmail(email);
+			List<Recipe> recipes = new List<Recipe>();
+			if (user != null)
+			{
+				List<UserRecipe> userRecipes = userRecipeService.GetUserRecipes(user.Id);
 
+				foreach (var userrecipe in userRecipes)
+				{
+					recipes.Add(userrecipe.Recipe);
+				}
+			}
+			if (recipes == null)
+			{
+				return NotFound();
+			}
+			else
+			{
+				return Ok(recipes);
+			}
+
+		}
 		// POST api/<controller>
 		[HttpPost]
-		public void Post([FromBody]string value)
+		public async Task Post([FromBody]PostRecipe postRecipe)
 		{
+			var recipeid = postRecipe.RecipeId;
+			var email = postRecipe.Email;
+			try
+			{
+				if (recipeid != null && email != null)
+				{
+					var olduser = userService.GetUserByEmail(email);
+					var userId = 0;
+					if (olduser == null)
+					{
+						User user = new User
+						{
+							Email = email
+						};
+						userId = await userService.SaveAsync(user);
+						if (userId == 0)
+						{
+							Console.WriteLine("Error Saving User");
+						}
+					}
+					else
+					{
+						userId = olduser.Id;
+					}
+
+					var recipe = recipeService.GetRecipeById(Convert.ToInt32(recipeid));
+					UserRecipe userRecipe = new UserRecipe()
+					{
+						RecipeId = recipe.Id,
+						UserId = userId
+					};
+					if (userRecipeService.GetUserRecipe(userRecipe) == null)
+					{
+						context.Add(userRecipe);
+						await context.SaveChangesAsync();
+					}
+				}
+			}
+			catch (Exception e)
+			{
+
+				Console.WriteLine(e.StackTrace, e.Message);
+			}
 		}
 
 		// PUT api/<controller>/5
@@ -55,10 +148,36 @@ namespace RecipeFinderAPI.Controllers
 		{
 		}
 
-		// DELETE api/<controller>/5
-		[HttpDelete("{id}")]
-		public void Delete(int id)
+		// DELETE api/<controller>/5/email
+		[HttpDelete("{id}/{email}")]
+		public async Task Delete(int id, string email)
 		{
+			try
+			{
+				if (id != 0 && email != null)
+				{
+					var user = userService.GetUserByEmail(email);
+					var recipe = recipeService.GetRecipeById(id);
+					if (user != null && recipe != null)
+					{
+						UserRecipe ur = new UserRecipe()
+						{
+							RecipeId = recipe.Id,
+							UserId = user.Id
+						};
+						var userRecipe = userRecipeService.GetUserRecipe(ur);
+						if (userRecipe != null)
+						{
+							context.Remove(userRecipe);
+							await context.SaveChangesAsync();
+						}
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e.Message);
+			}
 		}
 	}
 }

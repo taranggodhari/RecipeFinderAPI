@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using RecipeFinderAPI.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,9 @@ namespace RecipieFinderAPI.Models
 	public class RecipieFinderContext : DbContext
 	{
 		public RecipieFinderContext(DbContextOptions<RecipieFinderContext> options) : base(options) { }
-
-		//public DbSet<BookChapter> Chapters { get; set; }
+		public DbSet<Recipe> Recipes { get; set; }
+		public DbSet<Ingredient> Ingredients { get; set; }
+		public DbSet<User> Users { get; set; }
+		public DbSet<UserRecipe> UserRecipes { get; set; }
 	}
 }
